@@ -1,0 +1,38 @@
+name: Atualizar Dados B3
+
+on:
+  schedule:
+    # Roda a cada 30 minutos (pode ajustar, mas não ponha menos de 15min para o GitHub não bloquear)
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Permite que você clique num botão para rodar manualmente se quiser
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out do código
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Instalar dependências
+      run: |
+        pip install -r requirements.txt
+
+    - name: Rodar script de coleta
+      run: python fetch_b3_data.py
+
+    - name: Commit e Push dos novos dados
+      run: |
+        git config --global user.name 'Robô de Finanças'
+        git config --global user.email 'robo@financas.com'
+        git add dados_b3_atualizados.json
+        # Só faz commit se houver mudança nos dados
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Atualizando dados B3" && git push)
