@@ -1,0 +1,132 @@
+[
+  {
+    "code": "VALE3",
+    "name": "VALE3.SA",
+    "type": "Ação",
+    "value": 65.35,
+    "change": 0.29,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "PETR4",
+    "name": "PETR4.SA",
+    "type": "Ação",
+    "value": 32.47,
+    "change": -0.31,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "ITUB4",
+    "name": "ITUB4.SA",
+    "type": "Ação",
+    "value": 39.85,
+    "change": -0.3,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "BBDC4",
+    "name": "BBDC4.SA",
+    "type": "Ação",
+    "value": 18.82,
+    "change": 0.16,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "WEGE3",
+    "name": "WEGE3.SA",
+    "type": "Ação",
+    "value": 43.23,
+    "change": 0.02,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "BBAS3",
+    "name": "BBAS3.SA",
+    "type": "Ação",
+    "value": 22.12,
+    "change": 0.55,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "TAEE11",
+    "name": "TAEE11.SA",
+    "type": "FII/ETF",
+    "value": 42.91,
+    "change": 1.13,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "KLBN11",
+    "name": "KLBN11.SA",
+    "type": "FII/ETF",
+    "value": 17.63,
+    "change": 0.34,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "MXRF11",
+    "name": "MXRF11.SA",
+    "type": "FII/ETF",
+    "value": 9.56,
+    "change": -0.1,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "HGLG11",
+    "name": "HGLG11.SA",
+    "type": "FII/ETF",
+    "value": 159.97,
+    "change": -0.02,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "IVVB11",
+    "name": "IVVB11.SA",
+    "type": "FII/ETF",
+    "value": 404.49,
+    "change": 0.7,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "BOVA11",
+    "name": "BOVA11.SA",
+    "type": "FII/ETF",
+    "value": 152.31,
+    "change": 0.24,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
+    "code": "SMAL11",
+    "name": "SMAL11.SA",
+    "type": "FII/ETF",
+    "value": 112.25,
+    "change": 1.31,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  }
+]
