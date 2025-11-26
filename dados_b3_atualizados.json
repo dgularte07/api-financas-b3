@@ -50,6 +50,16 @@
     "extra": "Atualizado"
   },
   {
+    "code": "BBAS3",
+    "name": "BBAS3.SA",
+    "type": "Ação",
+    "value": 21.97,
+    "change": 0.6,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
     "code": "TAEE11",
     "name": "TAEE11.SA",
     "type": "FII/ETF",
