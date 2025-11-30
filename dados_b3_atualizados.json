@@ -118,15 +118,5 @@
     "segment": "Geral",
     "dividendYield": 0.0,
     "extra": "Atualizado"
-  },
-  {
-    "code": "SMAL11",
-    "name": "SMAL11.SA",
-    "type": "FII/ETF",
-    "value": 116.49,
-    "change": 0.51,
-    "segment": "Geral",
-    "dividendYield": 0.0,
-    "extra": "Atualizado"
   }
 ]
