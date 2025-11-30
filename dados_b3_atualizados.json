@@ -20,6 +20,16 @@
     "extra": "Atualizado"
   },
   {
+    "code": "ITUB4",
+    "name": "ITUB4.SA",
+    "type": "Ação",
+    "value": 41.64,
+    "change": 2.28,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
     "code": "BBDC4",
     "name": "BBDC4.SA",
     "type": "Ação",
