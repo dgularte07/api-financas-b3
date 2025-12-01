@@ -70,6 +70,16 @@
     "extra": "Atualizado"
   },
   {
+    "code": "KLBN11",
+    "name": "KLBN11.SA",
+    "type": "FII/ETF",
+    "value": 17.74,
+    "change": -0.06,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
     "code": "MXRF11",
     "name": "MXRF11.SA",
     "type": "FII/ETF",
