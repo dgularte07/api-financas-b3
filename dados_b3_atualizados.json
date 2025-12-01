@@ -103,8 +103,8 @@
     "code": "IVVB11",
     "name": "IVVB11.SA",
     "type": "FII/ETF",
-    "value": 411.24,
-    "change": 0.04,
+    "value": 410.75,
+    "change": -0.08,
     "segment": "Geral",
     "dividendYield": 0.0,
     "extra": "Atualizado"
@@ -113,8 +113,8 @@
     "code": "BOVA11",
     "name": "BOVA11.SA",
     "type": "FII/ETF",
-    "value": 155.54,
-    "change": -0.2,
+    "value": 155.5,
+    "change": -0.22,
     "segment": "Geral",
     "dividendYield": 0.0,
     "extra": "Atualizado"
@@ -123,8 +123,8 @@
     "code": "SMAL11",
     "name": "SMAL11.SA",
     "type": "FII/ETF",
-    "value": 116.2,
-    "change": -0.25,
+    "value": 116.0,
+    "change": -0.42,
     "segment": "Geral",
     "dividendYield": 0.0,
     "extra": "Atualizado"
