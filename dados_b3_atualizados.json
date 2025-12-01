@@ -110,16 +110,6 @@
     "extra": "Atualizado"
   },
   {
-    "code": "BOVA11",
-    "name": "BOVA11.SA",
-    "type": "FII/ETF",
-    "value": 155.85,
-    "change": 0.34,
-    "segment": "Geral",
-    "dividendYield": 0.0,
-    "extra": "Atualizado"
-  },
-  {
     "code": "SMAL11",
     "name": "SMAL11.SA",
     "type": "FII/ETF",
