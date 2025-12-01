@@ -1,5 +1,15 @@
 [
   {
+    "code": "VALE3",
+    "name": "VALE3.SA",
+    "type": "Ação",
+    "value": 67.92,
+    "change": 0.77,
+    "segment": "Geral",
+    "dividendYield": 0.0,
+    "extra": "Atualizado"
+  },
+  {
     "code": "PETR4",
     "name": "PETR4.SA",
     "type": "Ação",
