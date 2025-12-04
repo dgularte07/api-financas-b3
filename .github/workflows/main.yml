@@ -1,38 +1,46 @@
-name: Atualizar Dados B3
+name: Atualizador Híbrido (Preços 30min + Fundamentos Quinzenais)
 
 on:
   schedule:
-    # Roda a cada 15 minutos (pode ajustar, mas não ponha menos de 15min para o GitHub não bloquear)
-    - cron: '*/15 * * * *'
-  workflow_dispatch: # Permite que você clique num botão para rodar manualmente se quiser
+    # Roda a cada 30 minutos (ex: 09:00, 09:30, 10:00...)
+    - cron: '*/30 * * * *'
+  
+  # Permite rodar manualmente para testes (botão "Run workflow")
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  update-data:
     runs-on: ubuntu-latest
-
+    
+    # Timeout estendido para 6h para aguentar o scraping nos dias 01 e 16
+    timeout-minutes: 360 
+    
     steps:
-    - name: Check out do código
-      uses: actions/checkout@v3
+      - name: 📥 Baixar repositório
+        uses: actions/checkout@v3
 
-    - name: Configurar Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-    - name: Instalar dependências
-      run: |
-        pip install -r requirements.txt
+      - name: 📦 Instalar dependências
+        run: |
+          pip install yfinance pandas requests beautifulsoup4
 
-    - name: Rodar script de coleta
-      run: python fetch_b3_data.py
+      - name: 🤖 Rodar Robô Inteligente
+        run: |
+          python update_api.py
 
-    - name: Commit e Push dos novos dados
-      run: |
-        git config --global user.name 'Robô de Finanças'
-        git config --global user.email 'robo@financas.com'
-        git add dados_b3_atualizados.json
-        # Só faz commit se houver mudança nos dados
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Atualizando dados B3" && git push)
+      - name: 💾 Salvar e Commit
+        run: |
+          git config --global user.name 'Robô Financeiro'
+          git config --global user.email 'robo@financas.b3'
+          # Tenta adicionar o arquivo
+          git add dados.json
+          # Só faz commit se houver mudanças (evita erro se os preços não mudarem, ex: fim de semana)
+          git commit -m "Atualização Automática: $(date)" || echo "Sem mudanças para salvar."
+          git push
