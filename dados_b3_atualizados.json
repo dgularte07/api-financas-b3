@@ -4,7 +4,7 @@
     "ticker": "WEGE3",
     "name": "Weg S.A.",
     "type": "ACAO",
-    "price": 40.97,
+    "price": 40.03,
     "quantity": 100,
     "currency": "BRL",
     "indicators": {
@@ -20,7 +20,7 @@
     "ticker": "VALE3",
     "name": "Vale S.A.",
     "type": "ACAO",
-    "price": 66.88,
+    "price": 68.85,
     "quantity": 50,
     "currency": "BRL",
     "indicators": {
@@ -36,7 +36,7 @@
     "ticker": "KNRI11",
     "name": "Kinea Renda",
     "type": "FII",
-    "price": 162.13,
+    "price": 158.7,
     "quantity": 20,
     "currency": "BRL",
     "indicators": {
@@ -52,7 +52,7 @@
     "ticker": "HGLG11",
     "name": "CSHG Logística",
     "type": "FII",
-    "price": 163.78,
+    "price": 166.92,
     "quantity": 15,
     "currency": "BRL",
     "indicators": {
@@ -68,7 +68,7 @@
     "ticker": "AAPL34",
     "name": "Apple Inc.",
     "type": "BDR",
-    "price": 44.51,
+    "price": 44.91,
     "quantity": 40,
     "currency": "BRL",
     "indicators": {
@@ -84,7 +84,7 @@
     "ticker": "O",
     "name": "Realty Income",
     "type": "REIT",
-    "price": 51.45,
+    "price": 52.64,
     "quantity": 10,
     "currency": "USD",
     "indicators": {
@@ -100,7 +100,7 @@
     "ticker": "IVVB11",
     "name": "iShares S&P 500",
     "type": "ETF_NACIONAL",
-    "price": 283.93,
+    "price": 284.12,
     "quantity": 10,
     "currency": "BRL",
     "indicators": {
@@ -115,7 +115,7 @@
     "ticker": "VOO",
     "name": "Vanguard S&P 500",
     "type": "ETF_EUA",
-    "price": 402.22,
+    "price": 411.62,
     "quantity": 5,
     "currency": "USD",
     "indicators": {
@@ -130,7 +130,7 @@
     "ticker": "VWRA",
     "name": "Vanguard All-World",
     "type": "ETF_IRLANDA",
-    "price": 114.94,
+    "price": 114.85,
     "quantity": 15,
     "currency": "USD",
     "indicators": {
@@ -145,7 +145,7 @@
     "ticker": "BTC",
     "name": "Bitcoin",
     "type": "CRIPTO",
-    "price": 65075.28,
+    "price": 63722.72,
     "quantity": 0.005,
     "currency": "USD",
     "indicators": {
@@ -160,7 +160,7 @@
     "ticker": "ETH",
     "name": "Ethereum",
     "type": "CRIPTO",
-    "price": 3448.13,
+    "price": 3527.06,
     "quantity": 0.5,
     "currency": "USD",
     "indicators": {
