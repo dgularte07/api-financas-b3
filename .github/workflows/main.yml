@@ -40,7 +40,7 @@ jobs:
           git config --global user.name 'Robô Financeiro'
           git config --global user.email 'robo@financas.b3'
           # Tenta adicionar o arquivo
-          git add dados.json
+          git add dados_b3_atualizados.json
           # Só faz commit se houver mudanças (evita erro se os preços não mudarem, ex: fim de semana)
           git commit -m "Atualização Automática: $(date)" || echo "Sem mudanças para salvar."
           git push
