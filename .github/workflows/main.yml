@@ -2,10 +2,10 @@ name: Atualizador Híbrido (Preços 30min + Fundamentos Quinzenais)
 
 on:
   schedule:
-    # Roda a cada 30 minutos (ex: 09:00, 09:30, 10:00...)
+    # Roda a cada 30 minutos
     - cron: '*/30 * * * *'
   
-  # Permite rodar manualmente para testes (botão "Run workflow")
+  # Permite rodar manualmente para testes
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,6 @@ jobs:
   update-data:
     runs-on: ubuntu-latest
     
-    # Timeout estendido para 6h para aguentar o scraping nos dias 01 e 16
     timeout-minutes: 360 
     
     steps:
@@ -32,14 +31,18 @@ jobs:
           pip install yfinance pandas requests beautifulsoup4
 
       - name: 🤖 Rodar Robô Inteligente
+        # AQUI ESTÁ A MÁGICA: Conecta o segredo da sua imagem ao script Python
+        env:
+          BRAPI_TOKEN: ${{ secrets.BRAPI_TOKEN }}
         run: |
           python update_api.py
 
-      - name: Salvar e Commit
+      - name: 💾 Salvar e Commit
         run: |
           git config --global user.name 'Robô Financeiro'
           git config --global user.email 'robo@financas.b3'
-          git add dados_b3_atualizados.json
+          # Adiciona o arquivo gerado
+          git add dados.json
+          # Só faz commit se houver mudanças (evita erro se os preços não mudarem, ex: fim de semana/feriado)
           git commit -m "Atualização Automática: $(date)" || echo "Sem mudanças para salvar."
-          git pull --rebase origin main
-          git push origin main
+          git push
