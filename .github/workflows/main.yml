@@ -1,11 +1,8 @@
-name: Atualizador Híbrido (Preços 30min + Fundamentos Quinzenais)
+name: Atualizador Híbrido
 
 on:
   schedule:
-    # Roda a cada 30 minutos
-    - cron: '*/30 * * * *'
-  
-  # Permite rodar manualmente para testes
+    - cron: '*/30 * * * *' # A cada 30 min
   workflow_dispatch:
 
 permissions:
@@ -14,12 +11,13 @@ permissions:
 jobs:
   update-data:
     runs-on: ubuntu-latest
-    
     timeout-minutes: 360 
     
     steps:
       - name: 📥 Baixar repositório
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Baixa histórico completo para evitar erros de merge
 
       - name: 🐍 Configurar Python
         uses: actions/setup-python@v4
@@ -30,26 +28,28 @@ jobs:
         run: |
           pip install yfinance pandas requests beautifulsoup4
 
-      - name: 🤖 Rodar Robô Inteligente
-        # AQUI ESTÁ A MÁGICA: Conecta o segredo da sua imagem ao script Python
+      - name: 🤖 Rodar Robô
         env:
           BRAPI_TOKEN: ${{ secrets.BRAPI_TOKEN }}
         run: |
-          python update_api.py
+          # Tenta rodar o script. Se falhar por erro de rede, não quebra o workflow inteiro imediatamente
+          python update_api.py || echo "Script falhou parcialmente, tentando salvar o que foi gerado..."
 
-      - name: 💾 Salvar e Commit
+      - name: 💾 Salvar e Commit Robusto
         run: |
           git config --global user.name 'Robô Financeiro'
           git config --global user.email 'robo@financas.b3'
           
-          # Puxa as mudanças mais recentes antes de tentar enviar
-          git pull origin main --rebase || git pull origin main
-          
-          # Adiciona o arquivo gerado
+          # Adiciona arquivo
           git add dados.json
           
-          # Só faz commit se houver mudanças
-          git commit -m "Atualização Automática: $(date)" || echo "Sem mudanças para salvar."
-          
-          # Tenta enviar. Se falhar, tenta puxar de novo e enviar.
-          git push || (git pull origin main --rebase && git push)
+          # Verifica se tem algo para commitar
+          if git diff --staged --quiet; then
+            echo "Nenhuma mudança nos dados."
+          else
+            git commit -m "Atualização Automática: $(date)"
+            
+            # Tenta enviar. Se falhar (conflito), puxa (rebase) e envia de novo.
+            git pull --rebase origin main
+            git push origin main
+          fi
