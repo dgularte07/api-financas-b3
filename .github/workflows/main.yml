@@ -37,9 +37,9 @@ jobs:
 
       - name: Salvar e Commit
         run: |
-        git config --global user.name 'Robô Financeiro'
-        git config --global user.email 'robo@financas.b3'
-        git add dados_b3_atualizados.json
-        git commit -m "Atualização Automática: $(date)" || echo "Sem mudanças para salvar."
-        git pull --rebase origin main  # <--- LINHA MÁGICA PARA CORRIGIR O ERRO
-        git push
+          git config --global user.name 'Robô Financeiro'
+          git config --global user.email 'robo@financas.b3'
+          git add dados_b3_atualizados.json
+          git commit -m "Atualização Automática: $(date)" || echo "Sem mudanças para salvar."
+          git pull --rebase origin main
+          git push origin main
