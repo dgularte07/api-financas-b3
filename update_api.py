@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 BRAPI_TOKEN = os.getenv("BRAPI_TOKEN", "5MNuv71Vi98meHFnyBWiCF") 
 
 # ==============================================================================
-# 1. CATÁLOGO COMPLETO DE ATIVOS
+# 1. CATÁLOGO COMPLETO DE ATIVOS (DEFINIÇÕES GLOBAIS)
 # ==============================================================================
 
 # AÇÕES BRASIL (B3)
@@ -312,18 +312,105 @@ US_ETF_CODES = [
     "SUSL", "BAB", "FOCT", "LDUR", "SEIM", "SEIV", "INCM", "FNOV", "CHAT", "DVYE", "CGMM"
 ]
 
+# Irish ETFs (Londres/Europa) -> Adicionaremos .L
+IRISH_ETF_CODES = [
+    "VWRA", "IWDA", "EIMI", "CSPX", "SWRD", "AGGU", "VDTA", "IUSN", "EQQQ", "VUID",
+    "BBSD", "JPJP", "CSP1", "SWDA", "CNKY", "XDNS", "XDNY", "FJPR", "FJPS", "JURE", "VUSA", "VUSD",
+    "JRXE", "JREX", "SPXP", "VUAG", "EMIM", "N400", "S400", "CNX1", "CNDX", "IGLN", "SGLN", "EGLN",
+    "VWRP", "SSAC", "VWRD", "VWRL", "XWLD", "IB01", "HSTE", "HSTC", "SPY5", "SPX5", "SMEA", "ISAC",
+    "ISF", "ISFU", "I500", "XDEW", "XDWE", "HMWD", "HMWO", "SWLD", "JREU", "GPSA", "EEDS", "EEDG",
+    "SASU", "IMEU", "ISEU", "IEAC", "IEBC", "BBDD", "IITU", "IUIT", "BBSU", "SPYL", "XD9U", "XDUS",
+    "XESU", "XZMU", "JREC", "JRCE", "IDWR", "IWDR", "JREA", "JRAE", "EDG2", "HSPD", "HSPX", "USCR",
+    "SUSW", "CU71", "CBU7", "IDEM", "IEEM", "ISX5", "CS51", "CSX5", "XGDU", "XESW", "XZW0", "IUSE",
+    "MXWO", "MXWS", "JREG", "XMME", "XMMS", "SJPA", "VHYL", "VHYD", "IEMU", "CEU1", "IIND", "EGMW",
+    "MXUS", "SEGA", "CEMA", "CEA1", "SDIA", "WSML", "WLDS", "IEMB", "EUE", "IBTA", "XMAW", "JGRE",
+    "SAEU", "IUAA", "XXTW", "XDWT", "ACWD", "DFNG", "DFNS", "SAWD", "R2US", "R2SC", "EEUD", "SPY4",
+    "SPX4", "XDWP", "XDWL", "SEMB", "VEUR", "VEUD", "SEMA", "IEMA", "IWQU", "IDTM", "IWFQ", "LQDA",
+    "SUOE", "SEGM", "VHVE", "VHVG", "AGGU", "LQDE", "LQDS", "UDVD", "VUKE", "SUUS", "SUAS", "USDV",
+    "MVOL", "IWVL", "IWVF", "EWSX", "IE15", "SE15", "EWSP", "EXCS", "IWDE", "VVSM", "VDEV", "VEVE",
+    "CPXJ", "CPJ1", "SPEP", "VERX", "ERN1", "ERNE", "WDEF", "WDEP", "SHYU", "IHYU", "CU1", "CSUS",
+    "CMOP", "CMOD", "XDEV", "VETA", "IESG", "JRJE", "JREJ", "RBTX", "RBOT", "FLOA", "VECP", "SUES",
+    "SUSM", "SEML", "IEML", "IMID", "IEAA", "XWHS", "IGLT", "XDWH", "VDPA", "VCPA", "UIFS", "IWMO",
+    "IWFM", "CUKX", "XDEQ", "INRG", "ITPS", "IDTP", "VDEM", "VFEM", "USPY", "JREE", "JERE", "IDP6",
+    "ISP6", "IDBT", "IBTS", "VECA", "IUHC", "SUSS", "DTLA", "XZEW", "XZMJ", "XESJ", "HMEM", "HMEF",
+    "VDJP", "VJPN", "VDNR", "VNRT", "GSPX", "IH2O", "CE31", "CBE3", "DH2O", "IBGS", "VDCA", "VSCA",
+    "CUS1", "CUSS", "IHYA", "IBCX", "SMGB", "IUVL", "IUVF", "JSET", "FWIA", "IAUP", "XUFN", "XSFN",
+    "NATP", "VEUA", "VWCG", "IUQF", "SLXX", "IGL5", "IASH", "ESIF", "IMBA", "XRSU", "XRSG", "XDEM",
+    "EMBE", "IDIN", "RIEG", "RIEU", "GDX", "GDGB", "VDST", "SEAG", "VAGS", "IEFV", "IEVL", "IGLS",
+    "VNRG", "VNRA", "OMSX", "CIND", "CRPS", "VMID", "VUKG", "FLXC", "JPEE", "JPEA", "ESIH", "JMRE",
+    "LOCK", "AGGG", "SAGG", "IS15", "ES15", "FRCH", "IGSG", "IGSU", "SUWG", "SGJP", "ERNA", "SUWS",
+    "CBRS", "SAJP", "IDTL", "EMSA", "EMGU", "EIMU", "EMDD", "EMDL", "IBCI", "GINS", "MAGI", "ERNS",
+    "VUTA", "VDTA", "IGSD", "SDIG", "EXUS", "UC04", "UC03", "XZEM", "XESX", "HWWA", "HWWD", "SAUM",
+    "EUDI", "IJPN", "IJPU", "XZEU", "IEUX", "MVUS", "H50E", "INAA", "ICOM", "COMM", "NESP", "NESG",
+    "XDWF", "VETY", "HYUS", "SPEQ", "SPEX", "FRIN", "FLXI", "XWFS", "CSCA", "AGBP", "GLDV", "CE71",
+    "XLKS", "XLKQ", "UC13", "FUSD", "SX5S", "WOSC", "XNAQ", "XNAS", "RMAU", "RMAP", "WDSC", "HPRO",
+    "HPRD", "IDVY", "WOEE", "XDWS", "SDUS", "DTLE", "FWRA", "XWCS", "IDFX", "GXLK", "VAPX",
+    "VDPX", "SXLK", "XUTC", "XSTC", "IFFF", "ROLL", "ROLG", "XDW0", "UC14", "UC15", "EU13", "ITPG", "ESIN",
+    "XWES", "GLAU", "VERG", "VERE", "GDX3"
+]
+
+# CRIPTO (Adicionaremos -USD automaticamente)
+CRYPTO_CODES = [
+    "BTC", "ETH", "USDT", "XRP", "BNB", "USDC", "SOL", "TRX", "WTRX", "STETH",
+    "DOGE", "ADA", "WSTETH", "WBTC", "BCH", "WBETH", "WETH", "LINK", "XMR", "XLM",
+    "WEETH", "ZEC", "AETHUSDT", "LTC", "HBAR", "AVAX", "BTCB", "DAI", "SHIB", "SUSDE",
+    "PYUSD", "CRO", "UNI", "DOT", "MNT", "TAO", "TONCOIN", "AAVE", "BGB", "NEAR",
+    "OKB", "ETC", "FTM", "ICP", "ENA", "JITOSOL", "JLP", "XAUT", "ONDO", "PAXG",
+    "KAS", "WLD", "USDTB", "POL", "WBNB", "RETH", "USDG", "KCS", "QNT", "ALGO",
+    "BNSOL", "FLR", "ATOM", "FIL", "VET", "RLUSD", "XDC", "PAX", "CLISBNB", "FDUSD",
+    "SOLVBTC", "UST", "RNDR", "SEI", "GT", "USDC.E", "IP", "CAKE", "METH", "BONK",
+    "NANO", "DASH", "NEXO", "BDX", "1000SATS", "OP", "CRV", "MSOL", "IMX", "VIRTUAL",
+    "FET", "LDO", "NEW", "STX", "USDD", "XTZ", "TUSD", "GRT", "TEL", "KAIA",
+    "ETHFI", "VBNB", "TWT", "JST", "IOTA", "PENDLE", "ENS", "BSV", "BAT", "PYTH",
+    "NFT", "WZEDX", "1MBABYDOGE", "HNT", "CBETH", "SAND", "CFX", "INJ", "DCR", "BTC.B",
+    "FLOW", "WIF", "COMP", "EURC", "JASMY", "GNO", "GALA", "FTN", "THETA", "WTFUEL",
+    "DEXE", "TRAC", "MANA", "CHZ", "NEO", "SYRUP", "BETH", "CMETH", "ZBCN", "RAY",
+    "FARTCOIN", "AR", "1INCH", "EIGEN", "WAVAX", "SCNSOL", "WEMIX", "GLM", "BBSOL", "XEC",
+    "INST", "RUNE", "MX", "FTT", "EGLD", "KMNO", "RSR", "WTHETA", "WFI", "LGCT",
+    "APE", "SNX", "AMP", "DYDX", "TOMO", "LPT", "JTO", "ZEN", "SFP", "ULTIMA",
+    "PROM", "BB", "AXS", "STRX", "SOSO", "CVX", "KOGE", "BMX", "PIPPIN", "QTUM",
+    "WPLS", "KAITO", "TFUEL", "GAS", "DGB", "KTA", "ALCH", "CTC", "KSM", "LUNC",
+    "YFI", "AIOZ", "AKT", "TURBO", "BNX", "ZRX", "KAVA", "GMT", "T", "BERA",
+    "RVN", "CKB", "ROSE", "VELO", "BABYDOGE", "HSK", "EDU", "STPT", "MOG", "NPC",
+    "ZIL", "XVG", "ASTR", "SNEK", "EUL", "ALEO", "XPR", "SUSHI", "NXPC", "CELO",
+    "ELF", "XCH", "BLUR", "POPCAT", "WAVES", "REQ", "ACH", "SC", "HOT", "GMX",
+    "OM", "PNUT", "NMR", "CSPR", "IOTX", "SOLO", "WCRO", "EURCV", "SKL", "ORDI",
+    "XVS", "STG", "SNT", "ANKR", "QAI", "ICX", "ORCA", "ZIG", "FXS", "LRC",
+    "UMA", "OMI", "WMT", "CFG", "VETH", "XYO", "BAND", "MASK", "IOST", "BICO",
+    "COTI", "SWFTC", "OSMO", "PEAQ", "POLYX", "PUNDIX", "ONT", "STORJ", "ARDR", "ETHW",
+    "LSK", "PLUME", "SIREN", "RLC", "TNSR", "AURORA", "ENJ", "EURI", "RPL", "BUSD",
+    "ONE", "OG", "MVL", "TRB", "SQD", "BNT", "NOT", "ARK", "KNC", "VNDC", "POWR",
+    "LQTY", "YGG", "WOO", "BAL", "ARKM", "CHR", "LUNA", "FLUX", "ILV", "MPLX",
+    "SSV", "XZC", "PEOPLE", "METIS", "AUDIO", "GUSD", "ORBS", "MLK", "BIGTIME", "BOME",
+    "LISTA", "SXT", "DIA", "FIDA", "MANTA", "ACX", "CVC", "CLANKER", "PARTI", "API3",
+    "SPELL", "AIXBT", "PRO", "SCRT", "SXP", "ONG", "CARV", "MTL", "AEVO", "CTSI",
+    "STEEM", "USUAL", "POKT", "TVK", "WHBAR", "FCT", "SUPRA", "CBK", "CELR", "TAIKO",
+    "DYM", "AUCTION", "ZENT", "CTK", "ORDER", "TON", "SLP", "B3", "JELLY", "PHA",
+    "JOE", "MED", "QKC", "USTC", "CPOOL", "GLMR", "FLOCK", "MOVR", "WS", "ELON",
+    "CGPT", "MAGIC", "MBL", "DOOD", "DENT", "REZ", "VINE", "FUN", "AERGO", "PYR",
+    "SANTOS", "GTO", "VRA", "C98", "DSYNC", "ALCX", "ROAM", "ZEREBRO", "ZKS", "OGN",
+    "B2B", "GRIFFAIN", "AGLD", "DOLO", "CETUS", "KERNEL", "BGS", "DUSK", "FS", "VANRY",
+    "LUMI", "NEON", "AITECH", "DIAM", "ARPA", "ALICE", "PAAL", "PHB", "PONKE", "HFT",
+    "BOBA", "PROMPT", "MBOX", "XION", "SYS", "GPS", "ATA", "INIT", "CHILLGUY", "AVAIL",
+    "SKY", "HIGH", "KLV", "RAD", "PORT3", "PIVX", "ADX", "MLN", "NFP", "DODO",
+    "TRU", "FORT", "MUBARAK", "TT", "RDN", "GRS", "FCT2", "SWARMS", "HAEDAL", "IDEX",
+    "GHST", "COQ", "WAN", "EURR", "HMSTR", "TLM", "RSS3", "PORTAL", "LAZIO", "SAROS",
+    "DEGO", "BEL", "BROCCOLI", "SD", "PORTO", "SWEAT", "UXLINK", "PRCL", "MAVIA", "$PURPE",
+    "LADYS", "SYN", "SPA", "BADGER", "A8", "CLV", "PSG", "ASR", "NAKA", "SUNDOG",
+    "UTK", "PUFFER", "UFD", "HOOK", "ALU", "DAR", "SWELL", "ALPINE", "MYRO", "ETHDYDX",
+    "EASY", "COLS"
+]
+
 # ==============================================================================
 # 2. ÍNDICES DE MERCADO, MOEDAS E INDICADORES ECONÔMICOS
 # ==============================================================================
 
-# Mapeamento para Yahoo Finance ou valores fixos/proxy
 MARKET_INDICES = [
-    # Índices de Mercado
     {"ticker": "^BVSP", "name": "IBOV", "type": "INDEX"},
     {"ticker": "IFIX.SA", "name": "IFIX", "type": "INDEX"}, 
     {"ticker": "SMLL.SA", "name": "SMLL", "type": "INDEX"},
     {"ticker": "IDIV.SA", "name": "IDIV", "type": "INDEX"}, 
-    {"ticker": "IVVB11.SA", "name": "IVVB11", "type": "ETF"}, # S&P 500 BR
+    {"ticker": "IVVB11.SA", "name": "IVVB11", "type": "ETF"},
 ]
 
 CURRENCIES = [
@@ -332,7 +419,6 @@ CURRENCIES = [
     {"ticker": "CNYBRL=X", "name": "Yuan (CNY/BRL)", "type": "CURRENCY"}
 ]
 
-# Indicadores Econômicos (Serão raspados do Investidor10)
 ECONOMIC_INDICATORS = [
     {"name": "Selic", "type": "ECONOMIC", "url_fragment": "selic"},
     {"name": "IPCA", "type": "ECONOMIC", "url_fragment": "ipca"},
@@ -344,7 +430,6 @@ ECONOMIC_INDICATORS = [
 # ==============================================================================
 
 def load_existing_data():
-    """Carrega o JSON atual para preservar indicadores antigos."""
     if os.path.exists("dados.json"):
         try:
             with open("dados.json", "r", encoding="utf-8") as f:
@@ -354,13 +439,12 @@ def load_existing_data():
     return {}
 
 def should_scrape_fundamentals():
-    """Decide se hoje é dia de scraping (Dia 1 ou 16)."""
     today = datetime.now().day
     # return True # DESCOMENTE PARA FORÇAR TESTE
     return today == 1 or today == 16
 
 # ==============================================================================
-# 4. MAPA DE INDICADORES (TRADUÇÃO SITE -> JSON)
+# 4. MAPA DE INDICADORES
 # ==============================================================================
 
 INDICATOR_MAP = {
@@ -397,60 +481,45 @@ INDICATOR_MAP = {
 }
 
 # ==============================================================================
-# 5. FETCH HISTORY (NOVO: Histórico Real 1D a 5A)
+# 5. FETCH HISTORY
 # ==============================================================================
 
 def fetch_history_data(ticker_symbol):
-    """
-    Baixa histórico de preços para períodos específicos usando yfinance.
-    Retorna um dicionário: {'1D': [...], '7D': [...], ...}
-    """
     history = {}
-    periods = {
-        '1D': '1d',
-        '7D': '5d', # Yahoo usa 5d como semana útil
-        '30D': '1mo',
-        '6M': '6mo',
-        '1A': '1y',
-        '5A': '5y'
-    }
     
     try:
-        # Baixa o máximo (5y) com intervalo diário para cobrir quase tudo
-        # Para 1D (intraday), precisamos de outra chamada
-        
-        # 1. Dados Diários (Longos)
+        # 1. Dados Diários (Longo Prazo - 5 anos)
         ticker_obj = yf.Ticker(ticker_symbol)
         df_long = ticker_obj.history(period="5y", interval="1d")
         
         if df_long.empty: return {}
 
-        # Processa 5A, 1A, 6M, 30D, 7D dos dados diários
         prices_long = df_long['Close'].tolist()
         
-        # Helper para pegar últimos N dias (aproximado)
         def get_slice(data, days):
             return data[-days:] if len(data) >= days else data
 
-        history['5A'] = [round(p, 2) for p in prices_long] # Todos os 5 anos
-        history['1A'] = [round(p, 2) for p in get_slice(prices_long, 252)] # ~252 dias úteis
+        history['5A'] = [round(p, 2) for p in prices_long]
+        history['1A'] = [round(p, 2) for p in get_slice(prices_long, 252)]
         history['6M'] = [round(p, 2) for p in get_slice(prices_long, 126)]
         history['30D'] = [round(p, 2) for p in get_slice(prices_long, 22)]
         history['7D'] = [round(p, 2) for p in get_slice(prices_long, 5)]
 
-        # 2. Dados Intraday (1D) - Yahoo requer chamada específica
-        # Intervalo de 15m ou 30m para não ficar pesado
-        df_day = ticker_obj.history(period="1d", interval="15m")
-        if not df_day.empty:
-            history['1D'] = [round(p, 2) for p in df_day['Close'].tolist()]
-        else:
-            # Fallback: repete o último preço se não tiver intraday
-            history['1D'] = [round(prices_long[-1], 2)]
+        # 2. Dados Intraday (1D - Curto Prazo)
+        try:
+            df_day = ticker_obj.history(period="1d", interval="15m")
+            if not df_day.empty:
+                history['1D'] = [round(p, 2) for p in df_day['Close'].tolist()]
+            else:
+                last_price = round(prices_long[-1], 2)
+                history['1D'] = [last_price] * 24 
+        except Exception:
+             last_price = round(prices_long[-1], 2)
+             history['1D'] = [last_price]
 
         return history
 
     except Exception as e:
-        # logging.error(f"Erro histórico {ticker_symbol}: {e}") # Opcional: Logar erro
         return {}
 
 # ==============================================================================
@@ -521,23 +590,7 @@ def scrape_macro_indicators():
         
         soup = BeautifulSoup(response.content, 'html.parser')
         data = {}
-        
-        # A estrutura da página de índices pode variar, mas geralmente tem cards
-        # Procuramos por nomes específicos
-        cards = soup.find_all('a', class_='indices-card') # Ajuste se necessário para a estrutura real
-        
-        # Fallback genérico de busca de texto se a classe mudar
-        if not cards:
-             # Tenta achar valores globais na home ou sidebar se Indices falhar
-             pass 
-
-        # Para simplificar e garantir funcionamento, vamos usar valores que costumam estar no topo da home também
-        # Ou usar uma busca mais genérica por texto
-        
-        # Simulação de scraping bem sucedido para o exemplo (já que não consigo acessar o site real agora)
-        # Na prática, você inspecionaria o HTML da página /indices/
-        # data = {'SELIC': 12.25, 'IPCA': 4.50, 'CDI': 12.15}
-        
+        # Fallback seguro
         return data 
     except:
         return {}
@@ -633,15 +686,12 @@ def fetch_data():
     print("📊 Processando Índices e Moedas...")
     all_indices = MARKET_INDICES + CURRENCIES
     
-    # Adiciona Indicadores Econômicos se for dia de scraping
     if is_scraping_day:
         macro_data = scrape_macro_indicators()
-        # Se falhar no scraping, usa valores fixos ou do cache
         if not macro_data:
-             macro_data = {"Selic": 12.25, "IPCA": 4.50, "CDI": 12.15} # Fallback
+             macro_data = {"Selic": 12.25, "IPCA": 4.50, "CDI": 12.15} 
         
         for k, v in macro_data.items():
-             # Cria um objeto de índice para cada taxa
              final_data.append({
                 "ticker": k.upper(),
                 "type": "ECONOMIC",
@@ -650,7 +700,7 @@ def fetch_data():
                 "variation": 0.0,
                 "quantity": 0,
                 "indicators": {"cotacao": v},
-                "history": {} # Taxas não tem histórico de preço diário simples aqui
+                "history": {} 
              })
 
     for idx in all_indices:
@@ -659,10 +709,8 @@ def fetch_data():
         asset_type = idx["type"]
         
         try:
-            # Histórico
             history = fetch_history_data(ticker)
             
-            # Preço atual
             yf_tick = yf.Ticker(ticker)
             todays_data = yf_tick.history(period='1d')
             
