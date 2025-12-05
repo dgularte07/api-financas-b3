@@ -13,6 +13,10 @@ import re
 # Configuração de Logs
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# --- CONFIGURAÇÕES ---
+# Coloque seu token aqui ou use Variável de Ambiente no GitHub (Recomendado para segurança)
+BRAPI_TOKEN = os.getenv("BRAPI_TOKEN", "5MNuv71Vi98meHFnyBWiCF")
+
 # ==============================================================================
 # 1. CATÁLOGO COMPLETO DE ATIVOS
 # ==============================================================================
