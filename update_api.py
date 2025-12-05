@@ -405,14 +405,12 @@ CRYPTO_CODES = [
 # 2. ÍNDICES DE MERCADO, MOEDAS E INDICADORES ECONÔMICOS
 # ==============================================================================
 
-# Mapeamento para Yahoo Finance ou valores fixos/proxy
 MARKET_INDICES = [
-    # Índices de Mercado
     {"ticker": "^BVSP", "name": "IBOV", "type": "INDEX"},
     {"ticker": "IFIX.SA", "name": "IFIX", "type": "INDEX"}, 
     {"ticker": "SMLL.SA", "name": "SMLL", "type": "INDEX"},
     {"ticker": "IDIV.SA", "name": "IDIV", "type": "INDEX"}, 
-    {"ticker": "IVVB11.SA", "name": "IVVB11", "type": "ETF"}, # S&P 500 BR
+    {"ticker": "IVVB11.SA", "name": "IVVB11", "type": "ETF"},
 ]
 
 CURRENCIES = [
@@ -421,7 +419,6 @@ CURRENCIES = [
     {"ticker": "CNYBRL=X", "name": "Yuan (CNY/BRL)", "type": "CURRENCY"}
 ]
 
-# Indicadores Econômicos (Serão raspados do Investidor10)
 ECONOMIC_INDICATORS = [
     {"name": "Selic", "type": "ECONOMIC", "url_fragment": "selic"},
     {"name": "IPCA", "type": "ECONOMIC", "url_fragment": "ipca"},
@@ -433,7 +430,6 @@ ECONOMIC_INDICATORS = [
 # ==============================================================================
 
 def load_existing_data():
-    """Carrega o JSON atual para preservar indicadores antigos."""
     if os.path.exists("dados.json"):
         try:
             with open("dados.json", "r", encoding="utf-8") as f:
@@ -443,16 +439,14 @@ def load_existing_data():
     return {}
 
 def should_scrape_fundamentals():
-    """Decide se hoje é dia de scraping (Dia 1 ou 16)."""
     today = datetime.now().day
     # return True # DESCOMENTE PARA FORÇAR TESTE
     return today == 1 or today == 16
 
 # ==============================================================================
-# 4. MAPA DE INDICADORES (TRADUÇÃO SITE -> JSON)
+# 4. MAPA DE INDICADORES
 # ==============================================================================
 
-# Normaliza os textos encontrados no site para chaves do nosso JSON
 INDICATOR_MAP = {
     'p/l': 'pl',
     'p/receita (psr)': 'p_receita',
@@ -487,14 +481,10 @@ INDICATOR_MAP = {
 }
 
 # ==============================================================================
-# 5. FETCH HISTORY (NOVO: Histórico Real 1D a 5A)
+# 5. FETCH HISTORY
 # ==============================================================================
 
 def fetch_history_data(ticker_symbol):
-    """
-    Baixa histórico de preços para períodos específicos usando yfinance.
-    Retorna um dicionário: {'1D': [...], '7D': [...], ...}
-    """
     history = {}
     
     try:
@@ -507,15 +497,13 @@ def fetch_history_data(ticker_symbol):
         prices_long = df_long['Close'].tolist()
         
         def get_slice(data, days):
-            # Retorna os últimos 'days' elementos da lista
             return data[-days:] if len(data) >= days else data
 
-        # Preenche os períodos baseados em dias (fechamento diário)
         history['5A'] = [round(p, 2) for p in prices_long]
-        history['1A'] = [round(p, 2) for p in get_slice(prices_long, 252)] # ~1 ano útil
-        history['6M'] = [round(p, 2) for p in get_slice(prices_long, 126)] # ~6 meses úteis
-        history['30D'] = [round(p, 2) for p in get_slice(prices_long, 22)] # ~1 mês útil
-        history['7D'] = [round(p, 2) for p in get_slice(prices_long, 5)]   # ~1 semana útil
+        history['1A'] = [round(p, 2) for p in get_slice(prices_long, 252)]
+        history['6M'] = [round(p, 2) for p in get_slice(prices_long, 126)]
+        history['30D'] = [round(p, 2) for p in get_slice(prices_long, 22)]
+        history['7D'] = [round(p, 2) for p in get_slice(prices_long, 5)]
 
         # 2. Dados Intraday (1D - Curto Prazo)
         try:
@@ -532,7 +520,6 @@ def fetch_history_data(ticker_symbol):
         return history
 
     except Exception as e:
-        # Em caso de erro crítico no histórico, retorna vazio (o App tratará)
         return {}
 
 # ==============================================================================
@@ -603,10 +590,7 @@ def scrape_macro_indicators():
         
         soup = BeautifulSoup(response.content, 'html.parser')
         data = {}
-        
-        # Simulação de scraping bem sucedido para o exemplo
-        # Na prática, inspecione a página /indices/ se quiser extrair dinamicamente
-        # Por enquanto, fallback seguro
+        # Fallback seguro
         return data 
     except:
         return {}
