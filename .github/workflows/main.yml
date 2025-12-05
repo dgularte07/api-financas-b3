@@ -41,8 +41,15 @@ jobs:
         run: |
           git config --global user.name 'Robô Financeiro'
           git config --global user.email 'robo@financas.b3'
+          
+          # Puxa as mudanças mais recentes antes de tentar enviar
+          git pull origin main --rebase || git pull origin main
+          
           # Adiciona o arquivo gerado
           git add dados.json
-          # Só faz commit se houver mudanças (evita erro se os preços não mudarem, ex: fim de semana/feriado)
+          
+          # Só faz commit se houver mudanças
           git commit -m "Atualização Automática: $(date)" || echo "Sem mudanças para salvar."
-          git push
+          
+          # Tenta enviar. Se falhar, tenta puxar de novo e enviar.
+          git push || (git pull origin main --rebase && git push)
