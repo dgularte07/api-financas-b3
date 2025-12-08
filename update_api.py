@@ -5,28 +5,18 @@ import os
 import sys
 from datetime import datetime, timedelta
 
-# Garante encoding UTF-8 para evitar erros de acentuação no log
+# Garante encoding UTF-8
 sys.stdout.reconfigure(encoding='utf-8')
 
 def get_variation(base_price, volatility=0.02):
-    """Gera uma variação aleatória no preço para simular o mercado ao vivo."""
+    """Simula variação de mercado."""
     change = random.uniform(-volatility, volatility)
     return round(base_price * (1 + change), 2)
 
 def generate_history(current_price):
-    """
-    Gera histórico simulado para gráficos de 1D, 7D, 30D, 6M, 1A, 5A.
-    """
+    """Gera histórico simulado."""
     history = {}
-    periods = [
-        ('1D', 24, 0.005),
-        ('7D', 7, 0.015),
-        ('30D', 30, 0.03),
-        ('6M', 6, 0.08),
-        ('1A', 12, 0.12),
-        ('5A', 5, 0.25)
-    ]
-    
+    periods = [('1D', 24, 0.005), ('7D', 7, 0.015), ('30D', 30, 0.03), ('6M', 6, 0.08), ('1A', 12, 0.12), ('5A', 5, 0.25)]
     for period_name, points, vol in periods:
         prices = []
         temp_price = current_price
@@ -35,158 +25,161 @@ def generate_history(current_price):
             change = random.uniform(-vol, vol)
             temp_price = temp_price / (1 + change)
         history[period_name] = prices
-        
     return history
 
 def main():
-    print("Iniciando geração completa de dados categorizados...")
+    print("Gerando base de dados massiva de ativos...")
 
-    # ---------------------------------------------------------
-    # 1. ATIVOS DA CARTEIRA
-    # ---------------------------------------------------------
-    assets = [
-      # --- AÇÕES BRASIL (ACAO) ---
-      {
-        "id": "br1", "ticker": "WEGE3", "name": "Weg S.A.", "type": "ACAO",
-        "price": 40.50, "quantity": 100, "currency": "BRL",
-        "indicators": {"pl": 35.5, "roe": 25.4, "dy": 1.2}
-      },
-      {
-        "id": "br2", "ticker": "VALE3", "name": "Vale S.A.", "type": "ACAO",
-        "price": 68.20, "quantity": 50, "currency": "BRL",
-        "indicators": {"pl": 5.5, "roe": 30.1, "dy": 8.5}
-      },
-      {
-        "id": "br3", "ticker": "PETR4", "name": "Petrobras", "type": "ACAO",
-        "price": 36.80, "quantity": 80, "currency": "BRL",
-        "indicators": {"pl": 4.2, "roe": 32.5, "dy": 15.0}
-      },
-      {
-        "id": "br4", "ticker": "ITUB4", "name": "Itaú Unibanco", "type": "ACAO",
-        "price": 33.50, "quantity": 60, "currency": "BRL",
-        "indicators": {"pl": 8.5, "roe": 20.0, "dy": 4.5}
-      },
+    # ==========================================
+    # LISTA MASSIVA DE ATIVOS
+    # ==========================================
+    raw_assets = [
+        # --- AÇÕES BRASIL (IBOVESPA / SMALL CAPS) ---
+        ("VALE3", "Vale", "ACAO", 68.00, "BRL"), ("PETR4", "Petrobras", "ACAO", 36.50, "BRL"),
+        ("ITUB4", "Itaú Unibanco", "ACAO", 33.20, "BRL"), ("BBDC4", "Bradesco", "ACAO", 14.50, "BRL"),
+        ("BBAS3", "Banco do Brasil", "ACAO", 27.80, "BRL"), ("WEGE3", "Weg", "ACAO", 40.50, "BRL"),
+        ("ABEV3", "Ambev", "ACAO", 12.80, "BRL"), ("MGLU3", "Magalu", "ACAO", 2.10, "BRL"),
+        ("VIIA3", "Grupo Casas Bahia", "ACAO", 0.60, "BRL"), ("JBSS3", "JBS", "ACAO", 22.50, "BRL"),
+        ("SUZB3", "Suzano", "ACAO", 55.40, "BRL"), ("GGBR4", "Gerdau", "ACAO", 21.30, "BRL"),
+        ("RENT3", "Localiza", "ACAO", 52.10, "BRL"), ("LREN3", "Lojas Renner", "ACAO", 16.40, "BRL"),
+        ("PRIO3", "Prio", "ACAO", 45.20, "BRL"), ("RDOR3", "Rede D'Or", "ACAO", 28.90, "BRL"),
+        ("RAIL3", "Rumo", "ACAO", 22.10, "BRL"), ("CSAN3", "Cosan", "ACAO", 15.80, "BRL"),
+        ("B3SA3", "B3", "ACAO", 11.50, "BRL"), ("HAPV3", "Hapvida", "ACAO", 3.90, "BRL"),
+        ("ELET3", "Eletrobras", "ACAO", 38.20, "BRL"), ("EMBR3", "Embraer", "ACAO", 28.50, "BRL"),
+        ("CMIG4", "Cemig", "ACAO", 10.20, "BRL"), ("CPLE6", "Copel", "ACAO", 9.80, "BRL"),
+        ("SBSP3", "Sabesp", "ACAO", 78.50, "BRL"), ("TIMS3", "TIM", "ACAO", 17.20, "BRL"),
+        ("VIVT3", "Vivo", "ACAO", 50.10, "BRL"), ("UGPA3", "Ultrapar", "ACAO", 26.40, "BRL"),
+        ("EQTL3", "Equatorial", "ACAO", 32.10, "BRL"), ("RADL3", "Raia Drogasil", "ACAO", 26.50, "BRL"),
+        ("TOTS3", "Totvs", "ACAO", 29.80, "BRL"), ("CSNA3", "CSN Siderurgia", "ACAO", 14.20, "BRL"),
+        ("USIM5", "Usiminas", "ACAO", 7.50, "BRL"), ("GOAU4", "Metalúrgica Gerdau", "ACAO", 10.50, "BRL"),
+        ("BRFS3", "BRF", "ACAO", 16.20, "BRL"), ("MRFG3", "Marfrig", "ACAO", 9.80, "BRL"),
+        ("BEEF3", "Minerva", "ACAO", 6.50, "BRL"), ("KLBN11", "Klabin", "ACAO", 21.50, "BRL"),
+        ("ALOS3", "Allos", "ACAO", 23.40, "BRL"), ("MULT3", "Multiplan", "ACAO", 25.10, "BRL"),
+        ("IGTI11", "Iguatemi", "ACAO", 22.80, "BRL"), ("CYRE3", "Cyrela", "ACAO", 21.50, "BRL"),
+        ("EZTC3", "EZTEC", "ACAO", 15.20, "BRL"), ("MRVE3", "MRV", "ACAO", 7.80, "BRL"),
+        ("CVCB3", "CVC", "ACAO", 2.50, "BRL"), ("GOLL4", "Gol", "ACAO", 1.80, "BRL"),
+        ("AZUL4", "Azul", "ACAO", 10.50, "BRL"), ("PETZ3", "Petz", "ACAO", 4.20, "BRL"),
+        ("SOMA3", "Grupo Soma", "ACAO", 7.10, "BRL"), ("ARZZ3", "Arezzo", "ACAO", 60.50, "BRL"),
+        ("ASAI3", "Assaí", "ACAO", 13.50, "BRL"), ("CRFB3", "Carrefour", "ACAO", 10.80, "BRL"),
+        
+        # --- FUNDOS IMOBILIÁRIOS (IFIX) ---
+        ("KNRI11", "Kinea Renda", "FII", 160.00, "BRL"), ("HGLG11", "CSHG Logística", "FII", 165.50, "BRL"),
+        ("MXRF11", "Maxi Renda", "FII", 10.55, "BRL"), ("XPLG11", "XP Logística", "FII", 108.20, "BRL"),
+        ("VISC11", "Vinci Shoppings", "FII", 120.50, "BRL"), ("HGRU11", "CSHG Renda Urbana", "FII", 130.20, "BRL"),
+        ("BCFF11", "BTG Fundo de Fundos", "FII", 9.20, "BRL"), ("IRDM11", "Iridium Recebíveis", "FII", 75.50, "BRL"),
+        ("KNIP11", "Kinea Índices", "FII", 95.20, "BRL"), ("KNCR11", "Kinea Rendimentos", "FII", 102.50, "BRL"),
+        ("CPTS11", "Capitânia Securities", "FII", 8.50, "BRL"), ("RECR11", "Rec Recebíveis", "FII", 85.20, "BRL"),
+        ("HFOF11", "Hedge Top FOF", "FII", 78.50, "BRL"), ("JSRE11", "JS Real Estate", "FII", 70.10, "BRL"),
+        ("VILG11", "Vinci Logística", "FII", 98.50, "BRL"), ("MALL11", "Malls Brasil", "FII", 115.00, "BRL"),
+        ("XPML11", "XP Malls", "FII", 118.50, "BRL"), ("BTLG11", "BTG Logística", "FII", 102.80, "BRL"),
+        ("PVBI11", "VBI Prime Properties", "FII", 105.50, "BRL"), ("LVBI11", "VBI Logística", "FII", 116.00, "BRL"),
+        ("BRCO11", "Bresco Logística", "FII", 122.50, "BRL"), ("HCTR11", "Hectare CE", "FII", 35.50, "BRL"),
+        ("DEVA11", "Devant Recebíveis", "FII", 42.80, "BRL"), ("TORD11", "Tordesilhas", "FII", 2.50, "BRL"),
+        ("VGHF11", "Valora Hedge", "FII", 9.10, "BRL"), ("VGIP11", "Valora Cri", "FII", 88.50, "BRL"),
+        ("RBRR11", "RBR Rendimento", "FII", 89.20, "BRL"), ("RBRF11", "RBR Alpha", "FII", 75.50, "BRL"),
+        ("ALZR11", "Alianza Trust", "FII", 112.50, "BRL"), ("TRXF11", "TRX Real Estate", "FII", 110.00, "BRL"),
 
-      # --- FUNDOS IMOBILIÁRIOS (FII) ---
-      {
-        "id": "fii1", "ticker": "KNRI11", "name": "Kinea Renda", "type": "FII",
-        "price": 160.00, "quantity": 20, "currency": "BRL",
-        "indicators": {"p_vp": 1.01, "dy_12m": 8.5, "vacancia_fisica": 2.5}
-      },
-      {
-        "id": "fii2", "ticker": "HGLG11", "name": "CSHG Logística", "type": "FII",
-        "price": 165.50, "quantity": 15, "currency": "BRL",
-        "indicators": {"p_vp": 1.05, "dy_12m": 9.1, "vacancia_fisica": 1.5}
-      },
-      {
-        "id": "fii3", "ticker": "MXRF11", "name": "Maxi Renda", "type": "FII",
-        "price": 10.55, "quantity": 100, "currency": "BRL",
-        "indicators": {"p_vp": 1.02, "dy_12m": 12.5, "vacancia_fisica": 0.0}
-      },
+        # --- STOCKS AMERICANOS (S&P 500 / NASDAQ) ---
+        ("AAPL", "Apple Inc.", "STOCK", 185.50, "USD"), ("MSFT", "Microsoft Corp", "STOCK", 415.00, "USD"),
+        ("NVDA", "Nvidia Corp", "STOCK", 880.00, "USD"), ("GOOGL", "Alphabet Inc.", "STOCK", 175.50, "USD"),
+        ("AMZN", "Amazon.com", "STOCK", 180.20, "USD"), ("META", "Meta Platforms", "STOCK", 490.50, "USD"),
+        ("TSLA", "Tesla Inc.", "STOCK", 170.20, "USD"), ("BRK.B", "Berkshire Hathaway", "STOCK", 410.00, "USD"),
+        ("LLY", "Eli Lilly", "STOCK", 780.00, "USD"), ("V", "Visa Inc.", "STOCK", 280.50, "USD"),
+        ("JPM", "JPMorgan Chase", "STOCK", 195.00, "USD"), ("WMT", "Walmart", "STOCK", 60.50, "USD"),
+        ("XOM", "Exxon Mobil", "STOCK", 115.00, "USD"), ("UNH", "UnitedHealth", "STOCK", 480.00, "USD"),
+        ("MA", "Mastercard", "STOCK", 470.00, "USD"), ("PG", "Procter & Gamble", "STOCK", 160.00, "USD"),
+        ("JNJ", "Johnson & Johnson", "STOCK", 155.00, "USD"), ("HD", "Home Depot", "STOCK", 370.00, "USD"),
+        ("MRK", "Merck & Co", "STOCK", 125.00, "USD"), ("COST", "Costco Wholesale", "STOCK", 750.00, "USD"),
+        ("KO", "Coca-Cola", "STOCK", 60.00, "USD"), ("PEP", "PepsiCo", "STOCK", 168.00, "USD"),
+        ("BAC", "Bank of America", "STOCK", 36.00, "USD"), ("NFLX", "Netflix", "STOCK", 610.00, "USD"),
+        ("AMD", "Advanced Micro Devices", "STOCK", 170.00, "USD"), ("DIS", "Walt Disney", "STOCK", 110.00, "USD"),
+        ("NKE", "Nike", "STOCK", 95.00, "USD"), ("MCD", "McDonald's", "STOCK", 280.00, "USD"),
+        ("INTC", "Intel Corp", "STOCK", 40.00, "USD"), ("PFE", "Pfizer", "STOCK", 27.00, "USD"),
 
-      # --- STOCKS AMERICANOS (STOCK) ---
-      {
-        "id": "us1", "ticker": "AAPL", "name": "Apple Inc.", "type": "STOCK",
-        "price": 185.50, "quantity": 5, "currency": "USD",
-        "indicators": {"pl": 28.5, "roe": 150.0, "dy": 0.5}
-      },
-      {
-        "id": "us2", "ticker": "MSFT", "name": "Microsoft Corp", "type": "STOCK",
-        "price": 415.00, "quantity": 3, "currency": "USD",
-        "indicators": {"pl": 35.2, "roe": 40.0, "dy": 0.7}
-      },
-      {
-        "id": "us3", "ticker": "NVDA", "name": "Nvidia Corp", "type": "STOCK",
-        "price": 880.00, "quantity": 2, "currency": "USD",
-        "indicators": {"pl": 70.5, "roe": 90.0, "dy": 0.02}
-      },
+        # --- BDRs ---
+        ("MELI34", "Mercado Livre", "BDR", 85.40, "BRL"), ("TSLA34", "Tesla Inc.", "BDR", 35.20, "BRL"),
+        ("NVDC34", "Nvidia Corp", "BDR", 115.20, "BRL"), ("AAPL34", "Apple Inc.", "BDR", 48.50, "BRL"),
+        ("MSFT34", "Microsoft", "BDR", 55.20, "BRL"), ("GOGL34", "Alphabet", "BDR", 45.80, "BRL"),
+        ("AMZO34", "Amazon", "BDR", 38.90, "BRL"), ("M1TA34", "Meta", "BDR", 65.40, "BRL"),
+        ("BABA34", "Alibaba", "BDR", 18.50, "BRL"), ("NFLX34", "Netflix", "BDR", 42.10, "BRL"),
+        ("COCA34", "Coca-Cola", "BDR", 52.00, "BRL"), ("DISB34", "Disney", "BDR", 32.50, "BRL"),
+        ("VISA34", "Visa", "BDR", 60.20, "BRL"), ("MCDB34", "McDonalds", "BDR", 72.00, "BRL"),
+        ("PGCO34", "P&G", "BDR", 58.50, "BRL"), ("WALM34", "Walmart", "BDR", 45.00, "BRL"),
+        ("JNJB34", "Johnson & Johnson", "BDR", 62.00, "BRL"), ("PFIZ34", "Pfizer", "BDR", 28.00, "BRL"),
+        ("NIKE34", "Nike", "BDR", 35.00, "BRL"), ("SBUB34", "Starbucks", "BDR", 48.00, "BRL"),
 
-      # --- BDRs (BDR) ---
-      {
-        "id": "bdr1", "ticker": "MELI34", "name": "Mercado Livre", "type": "BDR",
-        "price": 85.40, "quantity": 15, "currency": "BRL",
-        "indicators": {"pl": 55.0, "roe": 25.0, "dy": 0.0}
-      },
-      {
-        "id": "bdr2", "ticker": "TSLA34", "name": "Tesla Inc.", "type": "BDR",
-        "price": 35.20, "quantity": 30, "currency": "BRL",
-        "indicators": {"pl": 45.0, "roe": 20.0, "dy": 0.0}
-      },
+        # --- REITS (Real Estate Investment Trusts) ---
+        ("O", "Realty Income", "REIT", 52.30, "USD"), ("PLD", "Prologis Inc", "REIT", 120.50, "USD"),
+        ("AMT", "American Tower", "REIT", 190.00, "USD"), ("EQIX", "Equinix", "REIT", 820.00, "USD"),
+        ("PSA", "Public Storage", "REIT", 280.00, "USD"), ("DLR", "Digital Realty", "REIT", 145.00, "USD"),
+        ("SPG", "Simon Property", "REIT", 150.00, "USD"), ("VICI", "VICI Properties", "REIT", 29.00, "USD"),
+        ("CCI", "Crown Castle", "REIT", 105.00, "USD"), ("WELL", "Welltower", "REIT", 95.00, "USD"),
+        ("AVB", "AvalonBay", "REIT", 185.00, "USD"), ("EQR", "Equity Residential", "REIT", 65.00, "USD"),
+        ("MAA", "Mid-America", "REIT", 130.00, "USD"), ("ESS", "Essex Property", "REIT", 240.00, "USD"),
+        ("ARE", "Alexandria RE", "REIT", 120.00, "USD"), ("BXP", "Boston Properties", "REIT", 65.00, "USD"),
 
-      # --- REITS (REIT) ---
-      {
-        "id": "reit1", "ticker": "O", "name": "Realty Income", "type": "REIT",
-        "price": 52.30, "quantity": 10, "currency": "USD",
-        "indicators": {"p_ffo": 14.2, "dy_annual": 5.4}
-      },
-      {
-        "id": "reit2", "ticker": "PLD", "name": "Prologis Inc", "type": "REIT",
-        "price": 120.50, "quantity": 5, "currency": "USD",
-        "indicators": {"p_ffo": 22.0, "dy_annual": 2.8}
-      },
+        # --- CRIPTOMOEDAS ---
+        ("BTC", "Bitcoin", "CRIPTO", 65000.00, "USD"), ("ETH", "Ethereum", "CRIPTO", 3500.00, "USD"),
+        ("SOL", "Solana", "CRIPTO", 145.00, "USD"), ("BNB", "Binance Coin", "CRIPTO", 600.00, "USD"),
+        ("XRP", "Ripple", "CRIPTO", 0.62, "USD"), ("ADA", "Cardano", "CRIPTO", 0.58, "USD"),
+        ("AVAX", "Avalanche", "CRIPTO", 45.00, "USD"), ("DOGE", "Dogecoin", "CRIPTO", 0.15, "USD"),
+        ("DOT", "Polkadot", "CRIPTO", 8.50, "USD"), ("LINK", "Chainlink", "CRIPTO", 18.00, "USD"),
+        ("MATIC", "Polygon", "CRIPTO", 0.90, "USD"), ("SHIB", "Shiba Inu", "CRIPTO", 0.000025, "USD"),
+        ("LTC", "Litecoin", "CRIPTO", 85.00, "USD"), ("BCH", "Bitcoin Cash", "CRIPTO", 450.00, "USD"),
+        ("UNI", "Uniswap", "CRIPTO", 12.00, "USD"), ("ATOM", "Cosmos", "CRIPTO", 11.00, "USD"),
 
-      # --- CRIPTOMOEDAS (CRIPTO) ---
-      {
-        "id": "cr1", "ticker": "BTC", "name": "Bitcoin", "type": "CRIPTO",
-        "price": 65000.00, "quantity": 0.005, "currency": "USD",
-        "indicators": {"market_cap_bilhoes": 1200.00, "hashrate": "600 EH/s"}
-      },
-      {
-        "id": "cr2", "ticker": "ETH", "name": "Ethereum", "type": "CRIPTO",
-        "price": 3500.00, "quantity": 0.5, "currency": "USD",
-        "indicators": {"market_cap_bilhoes": 400.00, "tvl_bilhoes": 55.4}
-      },
-      {
-        "id": "cr3", "ticker": "SOL", "name": "Solana", "type": "CRIPTO",
-        "price": 145.00, "quantity": 10, "currency": "USD",
-        "indicators": {"market_cap_bilhoes": 65.00}
-      },
+        # --- ETFs BRASIL ---
+        ("IVVB11", "iShares S&P 500", "ETF_NACIONAL", 280.00, "BRL"), ("BOVA11", "iShares Ibovespa", "ETF_NACIONAL", 125.00, "BRL"),
+        ("SMAL11", "iShares Small Cap", "ETF_NACIONAL", 105.00, "BRL"), ("HASH11", "Hashdex Crypto", "ETF_NACIONAL", 35.00, "BRL"),
+        ("NASD11", "Trend Nasdaq", "ETF_NACIONAL", 12.50, "BRL"), ("XINA11", "Trend China", "ETF_NACIONAL", 8.50, "BRL"),
+        ("GOLD11", "Trend Ouro", "ETF_NACIONAL", 11.20, "BRL"), ("DIVO11", "Itau Dividendos", "ETF_NACIONAL", 95.00, "BRL"),
+        ("MATB11", "Itau Materiais", "ETF_NACIONAL", 35.00, "BRL"), ("BRAX11", "iShares BrX-100", "ETF_NACIONAL", 90.00, "BRL"),
 
-      # --- ETFs BRASIL (ETF_NACIONAL) ---
-      {
-        "id": "etf_br1", "ticker": "IVVB11", "name": "iShares S&P 500", "type": "ETF_NACIONAL",
-        "price": 280.00, "quantity": 10, "currency": "BRL",
-        "indicators": {"taxa_adm": 0.23, "aum_milhoes": 2500.0}
-      },
-      {
-        "id": "etf_br2", "ticker": "SMAL11", "name": "iShares Small Cap", "type": "ETF_NACIONAL",
-        "price": 105.00, "quantity": 20, "currency": "BRL",
-        "indicators": {"taxa_adm": 0.50, "aum_milhoes": 1200.0}
-      },
+        # --- ETFs AMERICANOS ---
+        ("VOO", "Vanguard S&P 500", "ETF_EUA", 410.00, "USD"), ("SPY", "SPDR S&P 500", "ETF_EUA", 510.00, "USD"),
+        ("QQQ", "Invesco QQQ", "ETF_EUA", 440.00, "USD"), ("VTI", "Vanguard Total Stock", "ETF_EUA", 255.00, "USD"),
+        ("SCHD", "Schwab US Dividend", "ETF_EUA", 78.00, "USD"), ("JEPI", "JPMorgan Equity", "ETF_EUA", 56.00, "USD"),
+        ("VT", "Vanguard Total World", "ETF_EUA", 105.00, "USD"), ("TLT", "iShares 20+ Year", "ETF_EUA", 92.00, "USD"),
+        ("VNQ", "Vanguard Real Estate", "ETF_EUA", 85.00, "USD"), ("GLD", "SPDR Gold Shares", "ETF_EUA", 205.00, "USD"),
 
-      # --- ETFs AMERICANOS (ETF_EUA) ---
-      {
-        "id": "etf_us1", "ticker": "VOO", "name": "Vanguard S&P 500", "type": "ETF_EUA",
-        "price": 410.00, "quantity": 5, "currency": "USD",
-        "indicators": {"taxa_adm": 0.03, "sharpe_ratio": 0.92}
-      },
-      {
-        "id": "etf_us2", "ticker": "QQQ", "name": "Invesco QQQ", "type": "ETF_EUA",
-        "price": 440.00, "quantity": 4, "currency": "USD",
-        "indicators": {"taxa_adm": 0.20, "sharpe_ratio": 1.1}
-      },
-
-      # --- ETFs IRLANDESES (ETF_IRLANDA) ---
-      {
-        "id": "etf_ie1", "ticker": "VWRA", "name": "Vanguard All-World", "type": "ETF_IRLANDA",
-        "price": 115.00, "quantity": 15, "currency": "USD",
-        "indicators": {"taxa_adm": 0.22, "aum_bilhoes": 15.0}
-      },
-      {
-        "id": "etf_ie2", "ticker": "VUAA", "name": "Vanguard S&P 500", "type": "ETF_IRLANDA",
-        "price": 85.50, "quantity": 20, "currency": "USD",
-        "indicators": {"taxa_adm": 0.07, "aum_bilhoes": 8.5}
-      }
+        # --- ETFs IRLANDESES ---
+        ("VWRA", "Vanguard All-World", "ETF_IRLANDA", 115.00, "USD"), ("VUAA", "Vanguard S&P 500", "ETF_IRLANDA", 85.50, "USD"),
+        ("CSPX", "iShares Core S&P 500", "ETF_IRLANDA", 490.00, "USD"), ("EIMI", "iShares EM IMI", "ETF_IRLANDA", 30.00, "USD"),
+        ("IWDA", "iShares Core MSCI World", "ETF_IRLANDA", 88.00, "USD"), ("SXR8", "iShares S&P 500 EUR", "ETF_IRLANDA", 450.00, "USD"),
+        ("AGGU", "iShares Global Bond", "ETF_IRLANDA", 5.20, "USD"), ("IB01", "iShares Treasury 0-1yr", "ETF_IRLANDA", 105.00, "USD")
     ]
 
-    # Processa ativos: Atualiza preço e gera histórico
-    for asset in assets:
-        asset['price'] = get_variation(asset['price'])
-        asset['history'] = generate_history(asset['price'])
+    processed_assets = []
+    
+    for ticker, name, type_, price, currency in raw_assets:
+        # Gera indicadores aleatórios realistas para preencher a tela
+        indicators = {
+            "pl": random.uniform(5, 40),
+            "roe": random.uniform(10, 30),
+            "dy": random.uniform(0, 15),
+            "p_vp": random.uniform(0.8, 3.0),
+            "market_cap_bilhoes": random.uniform(10, 2000),
+            "vacancia_fisica": random.uniform(0, 15) if type_ in ["FII", "REIT"] else None
+        }
+        
+        # Variação no preço
+        final_price = get_variation(price)
+        
+        processed_assets.append({
+            "id": f"{type_.lower()}_{ticker.lower()}",
+            "ticker": ticker,
+            "name": name,
+            "type": type_,
+            "price": final_price,
+            "quantity": 0, # Quantidade na carteira começa zerada
+            "currency": currency,
+            "indicators": indicators,
+            "history": generate_history(final_price)
+        })
 
-    # ---------------------------------------------------------
-    # 2. ÍNDICES DE MERCADO
-    # ---------------------------------------------------------
+    # ==========================================
+    # 2. ÍNDICES DE MERCADO E MOEDAS
+    # ==========================================
     market_indices = [
         {"id": "idx1", "ticker": "CDI", "name": "Taxa CDI", "type": "INDEX", "price": 12.15, "format": "percent"},
         {"id": "idx2", "ticker": "IPCA", "name": "IPCA 12m", "type": "INDEX", "price": 4.62, "format": "percent"},
@@ -201,16 +194,15 @@ def main():
         {"id": "curr5", "ticker": "YUAN", "name": "Yuan Chinês", "type": "CURRENCY", "price": 0.83, "format": "currency"},
     ]
 
-    # Processa índices
     for idx in market_indices:
         vol = 0.005 if idx['format'] == 'percent' else 0.015
         idx['price'] = get_variation(idx['price'], vol)
         idx['history'] = generate_history(idx['price'])
 
-    # ---------------------------------------------------------
-    # 3. SALVAR ARQUIVO
-    # ---------------------------------------------------------
-    full_data = assets + market_indices
+    # ==========================================
+    # 3. SALVAR
+    # ==========================================
+    full_data = processed_assets + market_indices
     file_path = 'dados_b3_atualizados.json'
 
     try:
@@ -218,11 +210,10 @@ def main():
         with open(full_path, 'w', encoding='utf-8') as f:
             json.dump(full_data, f, indent=2, ensure_ascii=False)
 
-        print(f"Sucesso! Arquivo '{file_path}' gerado.")
-        print(f"Ativos: {len(assets)} | Índices: {len(market_indices)}")
+        print(f"Sucesso! {len(full_data)} itens gerados (Ativos: {len(processed_assets)} | Índices: {len(market_indices)})")
         
     except Exception as e:
-        print(f"Erro fatal ao salvar arquivo: {e}")
+        print(f"Erro fatal: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
