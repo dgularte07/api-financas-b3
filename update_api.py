@@ -9,14 +9,22 @@ from datetime import datetime, timedelta
 sys.stdout.reconfigure(encoding='utf-8')
 
 def get_variation(base_price, volatility=0.02):
-    """Simula variação de mercado."""
+    """Gera uma variação aleatória no preço para simular o mercado."""
     change = random.uniform(-volatility, volatility)
     return round(base_price * (1 + change), 2)
 
 def generate_history(current_price):
-    """Gera histórico simulado."""
+    """Gera histórico simulado para gráficos de 1D, 7D, 30D, 6M, 1A, 5A."""
     history = {}
-    periods = [('1D', 24, 0.005), ('7D', 7, 0.015), ('30D', 30, 0.03), ('6M', 6, 0.08), ('1A', 12, 0.12), ('5A', 5, 0.25)]
+    periods = [
+        ('1D', 24, 0.005),
+        ('7D', 7, 0.015),
+        ('30D', 30, 0.03),
+        ('6M', 6, 0.08),
+        ('1A', 12, 0.12),
+        ('5A', 5, 0.25)
+    ]
+    
     for period_name, points, vol in periods:
         prices = []
         temp_price = current_price
@@ -25,44 +33,98 @@ def generate_history(current_price):
             change = random.uniform(-vol, vol)
             temp_price = temp_price / (1 + change)
         history[period_name] = prices
+        
     return history
 
+def generate_indicators(type_):
+    """Gera indicadores fundamentalistas realistas baseados no tipo do ativo."""
+    indicators = {}
+    
+    if type_ in ['ACAO', 'STOCK', 'BDR']:
+        indicators = {
+            "pl": round(random.uniform(4, 40), 1),
+            "p_vp": round(random.uniform(0.5, 5.0), 2),
+            "dy": round(random.uniform(0, 15), 2),
+            "roe": round(random.uniform(5, 35), 1),
+            "margem_liquida": round(random.uniform(5, 40), 1),
+            "divida_liquida_ebitda": round(random.uniform(-1, 4), 1),
+            "cagr_lucros_5y": round(random.uniform(0, 20), 1)
+        }
+    elif type_ in ['FII', 'REIT']:
+        indicators = {
+            "p_vp": round(random.uniform(0.8, 1.2), 2) if type_ == 'FII' else None,
+            "p_ffo": round(random.uniform(10, 25), 1) if type_ == 'REIT' else None,
+            "dy_12m": round(random.uniform(6, 14), 2),
+            "dy_annual": round(random.uniform(3, 8), 2) if type_ == 'REIT' else None,
+            "vacancia_fisica": round(random.uniform(0, 15), 1),
+            "liquidez_diaria": round(random.uniform(100000, 10000000), 0)
+        }
+    elif type_ in ['CRIPTO']:
+        indicators = {
+            "market_cap_bilhoes": round(random.uniform(1, 1500), 1),
+            "vol_24h_bilhoes": round(random.uniform(0.1, 50), 1),
+            "hashrate": "N/A"
+        }
+    elif 'ETF' in type_:
+        indicators = {
+            "taxa_adm": round(random.uniform(0.03, 0.75), 2),
+            "aum_bilhoes": round(random.uniform(0.5, 500), 1),
+            "sharpe_ratio": round(random.uniform(0.5, 2.0), 2)
+        }
+        
+    return {k: v for k, v in indicators.items() if v is not None}
+
 def main():
-    print("Gerando base de dados massiva de ativos...")
+    print("Iniciando geração MASSIVA de dados (B3 Completa + FIIs)...")
 
     # ==========================================
-    # LISTA MASSIVA DE ATIVOS
+    # 1. LISTA MASSIVA DE ATIVOS (Cotação Base Aproximada)
     # ==========================================
     raw_assets = [
-        # --- AÇÕES BRASIL (IBOVESPA / SMALL CAPS) ---
-        ("VALE3", "Vale", "ACAO", 68.00, "BRL"), ("PETR4", "Petrobras", "ACAO", 36.50, "BRL"),
-        ("ITUB4", "Itaú Unibanco", "ACAO", 33.20, "BRL"), ("BBDC4", "Bradesco", "ACAO", 14.50, "BRL"),
+        # --- AÇÕES BRASIL (IBOVESPA + IDIV + SMLL) ---
+        ("VALE3", "Vale", "ACAO", 68.00, "BRL"), ("PETR4", "Petrobras PN", "ACAO", 36.50, "BRL"),
+        ("PETR3", "Petrobras ON", "ACAO", 38.20, "BRL"), ("ITUB4", "Itaú Unibanco", "ACAO", 33.20, "BRL"),
+        ("BBDC4", "Bradesco PN", "ACAO", 14.50, "BRL"), ("BBDC3", "Bradesco ON", "ACAO", 12.80, "BRL"),
         ("BBAS3", "Banco do Brasil", "ACAO", 27.80, "BRL"), ("WEGE3", "Weg", "ACAO", 40.50, "BRL"),
         ("ABEV3", "Ambev", "ACAO", 12.80, "BRL"), ("MGLU3", "Magalu", "ACAO", 2.10, "BRL"),
-        ("VIIA3", "Grupo Casas Bahia", "ACAO", 0.60, "BRL"), ("JBSS3", "JBS", "ACAO", 22.50, "BRL"),
+        ("VIIA3", "Casas Bahia", "ACAO", 0.60, "BRL"), ("JBSS3", "JBS", "ACAO", 22.50, "BRL"),
         ("SUZB3", "Suzano", "ACAO", 55.40, "BRL"), ("GGBR4", "Gerdau", "ACAO", 21.30, "BRL"),
         ("RENT3", "Localiza", "ACAO", 52.10, "BRL"), ("LREN3", "Lojas Renner", "ACAO", 16.40, "BRL"),
         ("PRIO3", "Prio", "ACAO", 45.20, "BRL"), ("RDOR3", "Rede D'Or", "ACAO", 28.90, "BRL"),
         ("RAIL3", "Rumo", "ACAO", 22.10, "BRL"), ("CSAN3", "Cosan", "ACAO", 15.80, "BRL"),
         ("B3SA3", "B3", "ACAO", 11.50, "BRL"), ("HAPV3", "Hapvida", "ACAO", 3.90, "BRL"),
-        ("ELET3", "Eletrobras", "ACAO", 38.20, "BRL"), ("EMBR3", "Embraer", "ACAO", 28.50, "BRL"),
-        ("CMIG4", "Cemig", "ACAO", 10.20, "BRL"), ("CPLE6", "Copel", "ACAO", 9.80, "BRL"),
-        ("SBSP3", "Sabesp", "ACAO", 78.50, "BRL"), ("TIMS3", "TIM", "ACAO", 17.20, "BRL"),
-        ("VIVT3", "Vivo", "ACAO", 50.10, "BRL"), ("UGPA3", "Ultrapar", "ACAO", 26.40, "BRL"),
-        ("EQTL3", "Equatorial", "ACAO", 32.10, "BRL"), ("RADL3", "Raia Drogasil", "ACAO", 26.50, "BRL"),
-        ("TOTS3", "Totvs", "ACAO", 29.80, "BRL"), ("CSNA3", "CSN Siderurgia", "ACAO", 14.20, "BRL"),
-        ("USIM5", "Usiminas", "ACAO", 7.50, "BRL"), ("GOAU4", "Metalúrgica Gerdau", "ACAO", 10.50, "BRL"),
-        ("BRFS3", "BRF", "ACAO", 16.20, "BRL"), ("MRFG3", "Marfrig", "ACAO", 9.80, "BRL"),
-        ("BEEF3", "Minerva", "ACAO", 6.50, "BRL"), ("KLBN11", "Klabin", "ACAO", 21.50, "BRL"),
-        ("ALOS3", "Allos", "ACAO", 23.40, "BRL"), ("MULT3", "Multiplan", "ACAO", 25.10, "BRL"),
-        ("IGTI11", "Iguatemi", "ACAO", 22.80, "BRL"), ("CYRE3", "Cyrela", "ACAO", 21.50, "BRL"),
-        ("EZTC3", "EZTEC", "ACAO", 15.20, "BRL"), ("MRVE3", "MRV", "ACAO", 7.80, "BRL"),
-        ("CVCB3", "CVC", "ACAO", 2.50, "BRL"), ("GOLL4", "Gol", "ACAO", 1.80, "BRL"),
-        ("AZUL4", "Azul", "ACAO", 10.50, "BRL"), ("PETZ3", "Petz", "ACAO", 4.20, "BRL"),
-        ("SOMA3", "Grupo Soma", "ACAO", 7.10, "BRL"), ("ARZZ3", "Arezzo", "ACAO", 60.50, "BRL"),
-        ("ASAI3", "Assaí", "ACAO", 13.50, "BRL"), ("CRFB3", "Carrefour", "ACAO", 10.80, "BRL"),
+        ("ELET3", "Eletrobras ON", "ACAO", 38.20, "BRL"), ("ELET6", "Eletrobras PNB", "ACAO", 42.10, "BRL"),
+        ("EMBR3", "Embraer", "ACAO", 28.50, "BRL"), ("CMIG4", "Cemig", "ACAO", 10.20, "BRL"),
+        ("CPLE6", "Copel", "ACAO", 9.80, "BRL"), ("SBSP3", "Sabesp", "ACAO", 78.50, "BRL"),
+        ("TIMS3", "TIM", "ACAO", 17.20, "BRL"), ("VIVT3", "Vivo", "ACAO", 50.10, "BRL"),
+        ("UGPA3", "Ultrapar", "ACAO", 26.40, "BRL"), ("EQTL3", "Equatorial", "ACAO", 32.10, "BRL"),
+        ("RADL3", "Raia Drogasil", "ACAO", 26.50, "BRL"), ("TOTS3", "Totvs", "ACAO", 29.80, "BRL"),
+        ("CSNA3", "CSN Siderurgia", "ACAO", 14.20, "BRL"), ("USIM5", "Usiminas", "ACAO", 7.50, "BRL"),
+        ("GOAU4", "Metalúrgica Gerdau", "ACAO", 10.50, "BRL"), ("BRFS3", "BRF", "ACAO", 16.20, "BRL"),
+        ("MRFG3", "Marfrig", "ACAO", 9.80, "BRL"), ("BEEF3", "Minerva", "ACAO", 6.50, "BRL"),
+        ("KLBN11", "Klabin", "ACAO", 21.50, "BRL"), ("ALOS3", "Allos", "ACAO", 23.40, "BRL"),
+        ("MULT3", "Multiplan", "ACAO", 25.10, "BRL"), ("IGTI11", "Iguatemi", "ACAO", 22.80, "BRL"),
+        ("CYRE3", "Cyrela", "ACAO", 21.50, "BRL"), ("EZTC3", "EZTEC", "ACAO", 15.20, "BRL"),
+        ("MRVE3", "MRV", "ACAO", 7.80, "BRL"), ("CVCB3", "CVC", "ACAO", 2.50, "BRL"),
+        ("GOLL4", "Gol", "ACAO", 1.80, "BRL"), ("AZUL4", "Azul", "ACAO", 10.50, "BRL"),
+        ("PETZ3", "Petz", "ACAO", 4.20, "BRL"), ("SOMA3", "Grupo Soma", "ACAO", 7.10, "BRL"),
+        ("ARZZ3", "Arezzo", "ACAO", 60.50, "BRL"), ("ASAI3", "Assaí", "ACAO", 13.50, "BRL"),
+        ("CRFB3", "Carrefour", "ACAO", 10.80, "BRL"), ("SLCE3", "SLC Agrícola", "ACAO", 18.50, "BRL"),
+        ("STBP3", "Santos Brasil", "ACAO", 13.20, "BRL"), ("RRRP3", "3R Petroleum", "ACAO", 30.50, "BRL"),
+        ("RECV3", "PetroReconcavo", "ACAO", 21.00, "BRL"), ("VBBR3", "Vibra", "ACAO", 24.50, "BRL"),
+        ("CPFE3", "CPFL Energia", "ACAO", 34.00, "BRL"), ("EGIE3", "Engie Brasil", "ACAO", 42.50, "BRL"),
+        ("TRPL4", "ISA CTEEP", "ACAO", 25.80, "BRL"), ("TAEE11", "Taesa", "ACAO", 36.50, "BRL"),
+        ("ALUP11", "Alupar", "ACAO", 30.20, "BRL"), ("SAPR11", "Sanepar", "ACAO", 28.50, "BRL"),
+        ("CSMG3", "Copasa", "ACAO", 19.80, "BRL"), ("BRAP4", "Bradespar", "ACAO", 20.50, "BRL"),
+        ("POMO4", "Marcopolo", "ACAO", 7.80, "BRL"), ("RANI3", "Irani", "ACAO", 10.20, "BRL"),
+        ("TASA4", "Taurus", "ACAO", 14.50, "BRL"), ("POSI3", "Positivo", "ACAO", 8.20, "BRL"),
+        ("INTB3", "Intelbras", "ACAO", 22.00, "BRL"), ("LWSA3", "Locaweb", "ACAO", 5.50, "BRL"),
+        ("CASH3", "Méliuz", "ACAO", 7.80, "BRL"), ("HYPE3", "Hypera", "ACAO", 32.50, "BRL"),
+        ("FLRY3", "Fleury", "ACAO", 16.80, "BRL"), ("ODPV3", "Odontoprev", "ACAO", 12.50, "BRL"),
+        ("PSSA3", "Porto Seguro", "ACAO", 28.50, "BRL"), ("BBSE3", "BB Seguridade", "ACAO", 33.50, "BRL"),
+        ("CXSE3", "Caixa Seguridade", "ACAO", 14.20, "BRL"), ("IRBR3", "IRB Brasil", "ACAO", 40.50, "BRL"),
         
-        # --- FUNDOS IMOBILIÁRIOS (IFIX) ---
+        # --- FUNDOS IMOBILIÁRIOS (IFIX Completo e Populares) ---
         ("KNRI11", "Kinea Renda", "FII", 160.00, "BRL"), ("HGLG11", "CSHG Logística", "FII", 165.50, "BRL"),
         ("MXRF11", "Maxi Renda", "FII", 10.55, "BRL"), ("XPLG11", "XP Logística", "FII", 108.20, "BRL"),
         ("VISC11", "Vinci Shoppings", "FII", 120.50, "BRL"), ("HGRU11", "CSHG Renda Urbana", "FII", 130.20, "BRL"),
@@ -78,6 +140,19 @@ def main():
         ("VGHF11", "Valora Hedge", "FII", 9.10, "BRL"), ("VGIP11", "Valora Cri", "FII", 88.50, "BRL"),
         ("RBRR11", "RBR Rendimento", "FII", 89.20, "BRL"), ("RBRF11", "RBR Alpha", "FII", 75.50, "BRL"),
         ("ALZR11", "Alianza Trust", "FII", 112.50, "BRL"), ("TRXF11", "TRX Real Estate", "FII", 110.00, "BRL"),
+        ("RECT11", "Rec Renda Imob", "FII", 38.00, "BRL"), ("SARE11", "Santander Renda", "FII", 45.20, "BRL"),
+        ("RBRP11", "RBR Properties", "FII", 55.00, "BRL"), ("RBRY11", "RBR Crédito", "FII", 98.00, "BRL"),
+        ("TGAR11", "TG Ativo Real", "FII", 120.00, "BRL"), ("KNSC11", "Kinea Securities", "FII", 89.00, "BRL"),
+        ("HGBS11", "Hedge Brasil Shop", "FII", 220.00, "BRL"), ("HGRE11", "CSHG Real Estate", "FII", 130.00, "BRL"),
+        ("KNHY11", "Kinea High Yield", "FII", 98.00, "BRL"), ("VSLH11", "Versalhes", "FII", 3.50, "BRL"),
+        ("HSLG11", "HSI Logística", "FII", 95.00, "BRL"), ("GTWR11", "Green Towers", "FII", 85.00, "BRL"),
+        ("GGRC11", "GGR Covepi", "FII", 112.00, "BRL"), ("VRTA11", "Fator Verita", "FII", 88.00, "BRL"),
+        ("CVBI11", "VBI CRI", "FII", 92.00, "BRL"), ("BTRA11", "BTG Terras", "FII", 65.00, "BRL"),
+        ("RBRL11", "RBR Log", "FII", 82.00, "BRL"), ("XPIN11", "XP Industrial", "FII", 78.00, "BRL"),
+        ("VINO11", "Vinci Offices", "FII", 8.50, "BRL"), ("SAAG11", "Santander Agências", "FII", 88.00, "BRL"),
+        ("OUJP11", "Ourinvest JPP", "FII", 95.00, "BRL"), ("MCCI11", "Mauá Capital", "FII", 92.00, "BRL"),
+        ("FIIB11", "Industrial Brasil", "FII", 450.00, "BRL"), ("RBVA11", "Rio Bravo Varejo", "FII", 110.00, "BRL"),
+        ("BARI11", "Barigui Rendimentos", "FII", 90.00, "BRL"), ("HGCR11", "CSHG Recebíveis", "FII", 102.00, "BRL"),
 
         # --- STOCKS AMERICANOS (S&P 500 / NASDAQ) ---
         ("AAPL", "Apple Inc.", "STOCK", 185.50, "USD"), ("MSFT", "Microsoft Corp", "STOCK", 415.00, "USD"),
@@ -151,19 +226,11 @@ def main():
 
     processed_assets = []
     
+    # Processamento em loop
     for ticker, name, type_, price, currency in raw_assets:
-        # Gera indicadores aleatórios realistas para preencher a tela
-        indicators = {
-            "pl": random.uniform(5, 40),
-            "roe": random.uniform(10, 30),
-            "dy": random.uniform(0, 15),
-            "p_vp": random.uniform(0.8, 3.0),
-            "market_cap_bilhoes": random.uniform(10, 2000),
-            "vacancia_fisica": random.uniform(0, 15) if type_ in ["FII", "REIT"] else None
-        }
         
-        # Variação no preço
         final_price = get_variation(price)
+        indicators = generate_indicators(type_)
         
         processed_assets.append({
             "id": f"{type_.lower()}_{ticker.lower()}",
@@ -171,7 +238,7 @@ def main():
             "name": name,
             "type": type_,
             "price": final_price,
-            "quantity": 0, # Quantidade na carteira começa zerada
+            "quantity": 0,
             "currency": currency,
             "indicators": indicators,
             "history": generate_history(final_price)
@@ -181,7 +248,9 @@ def main():
     # 2. ÍNDICES DE MERCADO E MOEDAS
     # ==========================================
     market_indices = [
-        {"id": "idx1", "ticker": "CDI", "name": "Taxa CDI", "type": "INDEX", "price": 12.15, "format": "percent"},
+        {"id": "idx_selic", "ticker": "SELIC", "name": "Taxa Selic", "type": "INDEX", "price": 11.25, "format": "percent"},
+        {"id": "idx_infla", "ticker": "INFLACAO", "name": "Inflação (IPCA)", "type": "INDEX", "price": 4.50, "format": "percent"},
+        {"id": "idx1", "ticker": "CDI", "name": "Taxa CDI", "type": "INDEX", "price": 11.15, "format": "percent"},
         {"id": "idx2", "ticker": "IPCA", "name": "IPCA 12m", "type": "INDEX", "price": 4.62, "format": "percent"},
         {"id": "idx3", "ticker": "IBOV", "name": "Ibovespa", "type": "INDEX", "price": 128500, "format": "points"},
         {"id": "idx4", "ticker": "SMLL", "name": "Small Caps", "type": "INDEX", "price": 2150, "format": "points"},
@@ -209,9 +278,7 @@ def main():
         full_path = os.path.join(os.getcwd(), file_path)
         with open(full_path, 'w', encoding='utf-8') as f:
             json.dump(full_data, f, indent=2, ensure_ascii=False)
-
         print(f"Sucesso! {len(full_data)} itens gerados (Ativos: {len(processed_assets)} | Índices: {len(market_indices)})")
-        
     except Exception as e:
         print(f"Erro fatal: {e}")
         sys.exit(1)
